@@ -69,5 +69,26 @@ namespace StokTakip
             baglanti.Close();
             MessageBox.Show("Silme Yapıldı");
         }
+        public List<Urun> UrunAra(string aranan)
+        {
+            List<Urun> aramaSonucu = new List<Urun>();
+            baglanti.Open();
+            SqlCommand komut = new SqlCommand("SELECT * FROM Urunler WHERE URUNAD LIKE @p1", baglanti);
+            komut.Parameters.AddWithValue("@p1", "%" + aranan + "%");
+            SqlDataReader dr = komut.ExecuteReader();
+
+            while (dr.Read())
+            {
+                Urun u = new Urun();
+                u.ID = Convert.ToInt32(dr[0]);
+                u.URUNAD = dr[1].ToString();
+                u.KATEGORI = dr[2].ToString();
+                u.STOKADET = Convert.ToInt32(dr[3]);
+                u.FIYAT = Convert.ToDecimal(dr[4]);
+                aramaSonucu.Add(u);
+            }
+            baglanti.Close();
+            return aramaSonucu;
+        }
     }
 }
